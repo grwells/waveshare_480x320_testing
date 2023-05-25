@@ -1,7 +1,9 @@
 #! /usr/bin/python3
 import PySimpleGUI as sg
 import random
-sg.theme("dark grey 9")
+#sg.theme("dark grey 9")
+sg.theme("dark black")
+#sg.theme("default 1")
 
 has_fix = False
 data_visible = False
@@ -127,7 +129,7 @@ window = sg.Window(
         no_titlebar=True,
         #alpha_channel=0.7,
         layout=layout, size=(480, 320),
-        font=('Arial', 11, 'italic')
+        font=('Arial', 15, 'bold')
     )
 
 
