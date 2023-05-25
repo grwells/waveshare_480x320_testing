@@ -13,9 +13,6 @@ interface_column = [
             sg.Push(),
             sg.Button('increment', visible=True),
             sg.Push(),
-        ],
-        [
-            sg.Push(),
             sg.Button("exit"),
             sg.Push(),
         ],
@@ -39,8 +36,21 @@ data_column = [
         [
             sg.Frame(
                     'EST. ACC.', 
-                    [[sg.Text(1000, key='-KEY-acc_est_mm'), sg.Text('mm /'), sg.Text('12', k='-KEY-acc_est_ft'), sg.Text('ft'), sg.Push()]],
-                    size=(200, 60)
+                    [
+                        [
+                            sg.Text(1000, key='-KEY-acc_est_mm'), 
+                            sg.Text('mm'), 
+                            sg.Push()
+                        ],
+                        [
+                            sg.Text('12', key='-KEY-acc_est_ft'), 
+                            sg.Text('ft'), 
+                            sg.Push()
+                        ]
+                    ],
+                    size=(200, 70),
+                    title_location='w',
+                    #background_color='#001b96'
                 ),
             sg.Frame(
                     'HDOP',
@@ -57,28 +67,57 @@ data_column = [
             
         ],
         [
-            sg.Button('update'),
+            sg.Frame(
+                'buttons', 
+                layout=[
+                    [
+                        sg.Button('freeze', visible=True),
+                        sg.Button('average', visible=True),
+                    ]
+                ],
+                visible=True,
+                key='-KEY-gps_buttons'
+            ),
+            sg.ProgressBar(
+                    100,
+                    size=(100, 10),
+                    pad=20,
+                    visible=False,
+                    key='-KEY-average_bar',
+                )
         ]
     ]
 
 layout = [
         [
+            sg.Column(
+                   layout=[[sg.Frame(
+                        'Fix Status',
+                        layout=[[sg.Text('no fix')]],
+                        size=(100, 50),
+                    )]],
+                   justification='center',
+                   key='-KEY-fix_status',
+                )
+        ],
+        [
             sg.Frame(
                 'Data', 
                 [[sg.Column(data_column, element_justification='center')]], 
-                size=(460, 200),
+                size=(460, 250),
                 k='-KEY-data_col', 
                 visible=False,
             ),
             sg.ProgressBar(
                 100,
+                size=(100, 10),
+                pad=50,
                 orientation='horizontal',
-                border_width='10',
                 key='-KEY-fix_prog',
                 visible=True),
         ],
         [
-            interface_column
+            interface_column,
         ]
     ]
 
@@ -108,11 +147,18 @@ while True:
             window['-KEY-fix_prog'].update(visible=False)
             window['-KEY-data_col'].update(visible=True)
 
+            window['-KEY-average_bar'].update(visible=False)
+            window['-KEY-gps_buttons'].update(visible=True)
+            window['-KEY-fix_status'].update(visible=False)
+            window['-KEY-fix_status'].Widget.master.pack_forget()
+            val = 0
+
         else:
             window['-KEY-fix_prog'].update_bar(val)
+            window['-KEY-average_bar'].update_bar(val)
         
 
-    if event == "update":
+    if event == "freeze":
         # update stuff
         window['lat_text'].update(random.uniform(0.0, 1000.0))
         window['long_text'].update(random.uniform(0.0, 1000.0))
@@ -131,6 +177,13 @@ while True:
         acc_est_ft = acc_est_mm * 0.00328084
         window['-KEY-acc_est_mm'].update(acc_est_mm)
         window['-KEY-acc_est_ft'].update(acc_est_ft)
-        
+
+    if event == 'average':
+        print('averaging')
+        #window['-KEY-update_button'].update(visible=False)
+        #window['-KEY-avg_button'].update(visible=False)
+        window['-KEY-average_bar'].update(visible=True)
+        window['-KEY-gps_buttons'].update(visible=False)
+        window['-KEY-average_bar'].update_bar(0)
 
 window.close()
