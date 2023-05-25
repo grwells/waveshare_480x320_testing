@@ -2,8 +2,8 @@
 import PySimpleGUI as sg
 import random
 #sg.theme("dark grey 9")
-sg.theme("dark black")
-#sg.theme("default 1")
+#sg.theme("dark black")
+sg.theme("default 1")
 
 has_fix = False
 data_visible = False
