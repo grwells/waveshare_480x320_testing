@@ -137,11 +137,9 @@ window = sg.Window(
         font=('Arial', 15, 'bold')
     )
 
-gps = None
 
-def init_gps():
-    port = serial.Serial('/dev/serial0', baudrate=38400, timeout=1)
-    gps = UbloxGps(port)
+port = serial.Serial('/dev/serial0', baudrate=38400, timeout=1)
+gps = UbloxGps(port)
 
 
 def update_gps():
@@ -213,8 +211,6 @@ def op_with_fix(event, values):
 ft_t0 = time.perf_counter()
 ft_current = ft_t0
 ft_timer_timeout = 40
-
-init_gps()
 
 # Create an event loop
 while True:
