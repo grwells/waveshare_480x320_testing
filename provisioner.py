@@ -116,8 +116,7 @@ layout = [
                 visible=False,
             ),
             sg.ProgressBar(
-                100,
-                size=(100, 10),
+                100, size=(100, 10),
                 pad=50,
                 orientation='horizontal',
                 key='-KEY-fix_prog',
@@ -146,6 +145,8 @@ def update_gps():
     print("listening for message")
     try:
         gps_msg = gps.stream_nmea()
+        print('received', gps_msg[1:6])
+
         if(gps_msg[1:6] == "GNGGA"):
             msg_parts = gps_msg.split(',')
            
@@ -153,7 +154,7 @@ def update_gps():
             sats = msg_parts[7]
 
             # set hdop and text color
-            hdop = msg_parts[8]
+            hdop = float(msg_parts[8])
             text_color = None
             if hdop > 0.8: 
                 text_color = '#fc0505'
