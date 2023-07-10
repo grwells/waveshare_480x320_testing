@@ -1,6 +1,13 @@
 #! /usr/bin/python3
+# generic imports
 import PySimpleGUI as sg
 import random
+
+import time
+# RPi imports
+from ublox_gps import UbloxGps
+import serial
+
 #sg.theme("dark grey 9")
 #sg.theme("dark black")
 sg.theme("default 1")
@@ -12,8 +19,6 @@ val = 0
 
 interface_column = [
         [
-            sg.Push(),
-            sg.Button('increment', visible=True),
             sg.Push(),
             sg.Button("exit"),
             sg.Push(),
@@ -132,49 +137,62 @@ window = sg.Window(
         font=('Arial', 15, 'bold')
     )
 
+gps = None
 
-# Create an event loop
-while True:
-    event, values = window.read()
+def init_gps():
+    port = serial.Serial('/dev/serial0', baudrate=38400, timeout=1)
+    gps = UbloxGps(port)
+
+
+def update_gps():
+    print("listening for message")
+    try:
+        gps_msg = gps.stream_nmea()
+        if(gps_msg[1:6] == "GNGGA")
+            msg_parts = gps_msg.split(',')
+           
+            # number of satellites
+            sats = msg_parts[7]
+
+            # set hdop and text color
+            hdop = msg_parts[8]
+            text_color = None
+            if hdop > 0.8: 
+                text_color = '#fc0505'
+            elif hdop <= 0.79 and hdop >= 2:
+                text_color = '#fce705'
+            else:
+                text_color='#08cc18'
+
+            lat = msg_parts[2]
+            lat_hemi = msg_parts[3]
+            long = msg_parts[4]
+            long_hemi = msg_parts[5]
+
+            # post values to display
+            window['hdop_text'].update(hdop, text_color=text_color)
+            window['sat_text'].update(sats)
+            window['lat_text'].update(lat)
+            window['long_text'].update(long)
+            
+
+    except (ValueError, IOError) as err:
+        print(err)
+
+def cleanup_gps():
+    port.close()
+
+
+def op_with_fix(event, values):
     # End program if user closes window or
     # presses the OK button
     if event == "exit" or event == sg.WIN_CLOSED:
-        break
-
-
-    if event == 'increment':
-        val += 20
-        print('val = ', val)
-        if val >= 100:
-            window['-KEY-fix_prog'].update(visible=False)
-            window['-KEY-data_col'].update(visible=True)
-
-            window['-KEY-average_bar'].update(visible=False)
-            window['-KEY-gps_buttons'].update(visible=True)
-            window['-KEY-fix_status'].update(visible=False)
-            window['-KEY-fix_status'].Widget.master.pack_forget()
-            val = 0
-
-        else:
-            window['-KEY-fix_prog'].update_bar(val)
-            window['-KEY-average_bar'].update_bar(val)
+        return False
         
 
     if event == "freeze":
         # update stuff
-        window['lat_text'].update(random.uniform(0.0, 1000.0))
-        window['long_text'].update(random.uniform(0.0, 1000.0))
-        hdop = random.uniform(0.0, 1.0)
-        text_color = None
-        if hdop > 0.8: 
-            text_color = '#fc0505'
-        elif hdop <= 0.79 and hdop >= 2:
-            text_color = '#fce705'
-        else:
-            text_color='#08cc18'
-
-        window['hdop_text'].update(hdop, text_color=text_color)
-        window['sat_text'].update(random.randrange(0, 30))
+        update_gps()
         acc_est_mm = random.randrange(300, 3000)
         acc_est_ft = acc_est_mm * 0.00328084
         window['-KEY-acc_est_mm'].update(acc_est_mm)
@@ -187,5 +205,50 @@ while True:
         window['-KEY-average_bar'].update(visible=True)
         window['-KEY-gps_buttons'].update(visible=False)
         window['-KEY-average_bar'].update_bar(0)
+
+
+    return True
+
+
+ft_t0 = time.perf_counter()
+ft_current = ft_t0
+ft_timer_timeout = 40
+
+
+# Create an event loop
+while True:
+    # use timeout so that we can use timers
+    event, values = window.read(timeout=1)
+
+    if has_fix:
+        cont = op_with_fix(event, values)
+        # update gps values
+        update_gps()
+        if not cont: break
+
+    else:
+        # initiate 40 sec count down on bar
+        # show status too?
+        if ft_current - ft_t0 <= 40:
+            # show percentage of time elapsed
+            perc_elapsed = ((ft_current - ft_t0)/40)*100
+            print(perc_elapsed)
+            window['-KEY-fix_prog'].update_bar(perc_elapsed)
+            ft_current = time.perf_counter()
+
+        else:
+            has_fix = True
+            # transition to GPS data
+            window['-KEY-fix_prog'].update_bar(0)
+            window['-KEY-fix_prog'].update(visible=False)
+            window['-KEY-data_col'].update(visible=True)
+
+            window['-KEY-average_bar'].update(visible=False)
+            window['-KEY-gps_buttons'].update(visible=True)
+            window['-KEY-fix_status'].update(visible=False)
+            window['-KEY-fix_status'].Widget.master.pack_forget()
+
+    if event == "exit" or event == sg.WIN_CLOSED:
+        break 
 
 window.close()
