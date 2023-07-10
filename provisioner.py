@@ -152,7 +152,6 @@ def update_gps():
         v_acc = hp_geo_coords.vAcc
 
         window['-KEY-acc_est_mm'].update(h_acc)
-        window['-KEY-acc_est_ft'].update(v_acc)
         """
         print('received', gps_msg[1:6])
 
@@ -176,12 +175,14 @@ def update_gps():
             lat_hemi = msg_parts[3]
             long = msg_parts[4]
             long_hemi = msg_parts[5]
+            alt = msg_parts[9]
 
             # post values to display
             window['hdop_text'].update(hdop, text_color=text_color)
             window['sat_text'].update(sats)
             window['lat_text'].update(lat)
             window['long_text'].update(long)
+            window['-KEY-acc_est_ft'].update(alt)
             
 
     except (ValueError, IOError) as err:
