@@ -148,7 +148,7 @@ def update_gps():
     print("listening for message")
     try:
         gps_msg = gps.stream_nmea()
-        if(gps_msg[1:6] == "GNGGA")
+        if(gps_msg[1:6] == "GNGGA"):
             msg_parts = gps_msg.split(',')
            
             # number of satellites
