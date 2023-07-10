@@ -29,13 +29,13 @@ data_column = [
         [
             sg.Frame(
                     'Latitude',
-                    [[sg.Text(1000.0000, key='lat_text'), sg.Push(), sg.Text('N')]],
+                    [[sg.Text('--', key='lat_text'), sg.Push(), sg.Text('N')]],
                     size=(200, 60),
                     key='lat_frame'
                 ),
             sg.Frame(
                     'Longitude',
-                    [[sg.Text(1200.0000, key='long_text'), sg.Push(), sg.Text('W')]],
+                    [[sg.Text('--', key='long_text'), sg.Push(), sg.Text('W')]],
                     size=(200, 60),
                     key='long_frame'
                 ),
@@ -45,12 +45,12 @@ data_column = [
                     'EST. ACC.', 
                     [
                         [
-                            sg.Text(1000, key='-KEY-acc_est_mm'), 
+                            sg.Text('--', key='-KEY-acc_est_mm'), 
                             sg.Text('mm'), 
                             sg.Push()
                         ],
                         [
-                            sg.Text('12', key='-KEY-acc_est_ft'), 
+                            sg.Text('--', key='-KEY-acc_est_ft'), 
                             sg.Text('ft'), 
                             sg.Push()
                         ]
@@ -61,13 +61,13 @@ data_column = [
                 ),
             sg.Frame(
                     'HDOP',
-                    [[sg.Text(0.69, key='hdop_text'),sg.Push()]],
+                    [[sg.Text("-", key='hdop_text'),sg.Push()]],
                     size=(100, 60),
                     key='hdop_frame'
                 ),
             sg.Frame(
                     'Satellites',
-                    [[sg.Text(12, key='sat_text'),sg.Push()]],
+                    [[sg.Text("-", key='sat_text'),sg.Push()]],
                     size=(100, 60),
                     key='sat_frame'
                 ),
