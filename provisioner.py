@@ -8,6 +8,9 @@ import time
 from ublox_gps import UbloxGps
 import serial
 
+port = serial.Serial('/dev/serial0', baudrate=38400, timeout=1)
+gps = UbloxGps(port)
+
 #sg.theme("dark grey 9")
 #sg.theme("dark black")
 sg.theme("default 1")
