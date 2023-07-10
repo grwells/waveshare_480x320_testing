@@ -146,13 +146,14 @@ def update_gps():
     try:
         gps_msg = gps.stream_nmea()
         # NAV_HPPOSLLH
+        """
         hp_geo_coords = gps.hp_geo_coords()
         h_acc = hp_geo_coords.hAcc
         v_acc = hp_geo_coords.vAcc
 
         window['-KEY-acc_est_mm'].update(h_acc)
         window['-KEY-acc_est_ft'].update(v_acc)
-
+        """
         print('received', gps_msg[1:6])
 
         if(gps_msg[1:6] == "GNGGA"):
