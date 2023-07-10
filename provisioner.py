@@ -145,6 +145,14 @@ def update_gps():
     print("listening for message")
     try:
         gps_msg = gps.stream_nmea()
+        # NAV_HPPOSLLH
+        hp_geo_coords = gps.hp_geo_coords()
+        h_acc = hp_geo_coords.hAcc
+        v_acc = hp_geo_coords.vAcc
+
+        window['-KEY-acc_est_mm'].update(h_acc)
+        window['-KEY-acc_est_ft'].update(v_acc)
+
         print('received', gps_msg[1:6])
 
         if(gps_msg[1:6] == "GNGGA"):
@@ -194,8 +202,8 @@ def op_with_fix(event, values):
         update_gps()
         acc_est_mm = random.randrange(300, 3000)
         acc_est_ft = acc_est_mm * 0.00328084
-        window['-KEY-acc_est_mm'].update(acc_est_mm)
-        window['-KEY-acc_est_ft'].update(acc_est_ft)
+        #window['-KEY-acc_est_mm'].update(acc_est_mm)
+        #window['-KEY-acc_est_ft'].update(acc_est_ft)
 
     if event == 'average':
         print('averaging')
