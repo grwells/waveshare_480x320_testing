@@ -74,7 +74,7 @@ data_column = [
             
         ],
     ]
-            """
+"""
         [
             sg.Frame(
                 'buttons', 
@@ -95,7 +95,7 @@ data_column = [
                     key='-KEY-average_bar',
                 )
         ]
-            """
+"""
 
 layout = [
         [
