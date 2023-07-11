@@ -42,16 +42,16 @@ data_column = [
         ],
         [
             sg.Frame(
-                    'EST. ACC.', 
+                    'Date, Time & Alt.', 
                     [
                         [
-                            sg.Text('--', key='-KEY-acc_est_mm'), 
-                            sg.Text('mm'), 
+                            sg.Text('--', key='-KEY-alt'), 
+                            sg.Text('m'), 
                             sg.Push()
                         ],
                         [
-                            sg.Text('--', key='-KEY-acc_est_ft'), 
-                            sg.Text('ft'), 
+                            sg.Text('hh:mm:ss', key='-KEY-time'), 
+                            sg.Text('mm/dd/yy', key='-KEY-date'), 
                             sg.Push()
                         ]
                     ],
@@ -143,19 +143,17 @@ gps = UbloxGps(port)
 
 def update_gps():
     print("listening for message")
+
+    got_fix = False
+
     try:
         gps_msg = gps.stream_nmea()
-        # NAV_HPPOSLLH
-        """
-        hp_geo_coords = gps.hp_geo_coords()
-        h_acc = hp_geo_coords.hAcc
-        v_acc = hp_geo_coords.vAcc
-
-        window['-KEY-acc_est_mm'].update(h_acc)
-        """
+    
         print('received', gps_msg[1:6])
 
         if(gps_msg[1:6] == "GNGGA"):
+            # update with GNGGA values
+            got_fix = True
             msg_parts = gps_msg.split(',')
            
             # number of satellites
@@ -171,6 +169,8 @@ def update_gps():
             else:
                 text_color='#08cc18'
 
+            time_utc_str = msg_parts[1]
+            time_str = time_utc_str[0:1] + ":" + time_utc_str[2:3] + ":" + time_utc_str[4:5]
             lat = msg_parts[2]
             lat_hemi = msg_parts[3]
             long = msg_parts[4]
@@ -182,11 +182,37 @@ def update_gps():
             window['sat_text'].update(sats)
             window['lat_text'].update(lat)
             window['long_text'].update(long)
-            window['-KEY-acc_est_ft'].update(alt)
-            
+            window['-KEY-alt'].update(alt)
+            window['-KEY-time'].update(time_str)
+
+        elif(gps_msg[1:6] == 'GNRMC'):
+            # TODO pull date, time, long and lat
+            got_fix = True
+            msg_parts = gps_msg.split(',')
+
+            time_utc_str = msg_parts[1]
+            time_str = time_utc_str[0:1] + ":" + time_utc_str[2:3] + ":" + time_utc_str[4:5]
+
+            date_utc_str = msg_parts[9]
+            date_str = date_utc_str[0:1] + "/" + date_utc_str[2:3] + "/" + date_utc_str[4:5]
+
+            lat = msg_parts[2]
+            lat_hemi = msg_parts[3]
+            long = msg_parts[4]
+            long_hemi = msg_parts[5]
+
+            window['lat_text'].update(lat)
+            window['long_text'].update(long)
+
+            window['-KEY-time'].update(time_str)
+            window['-Key-date'].update(date_str)
+
+        return got_fix 
 
     except (ValueError, IOError) as err:
         print(err)
+
+    return got_fix 
 
 def cleanup_gps():
     port.close()
@@ -202,10 +228,6 @@ def op_with_fix(event, values):
     if event == "freeze":
         # update stuff
         update_gps()
-        acc_est_mm = random.randrange(300, 3000)
-        acc_est_ft = acc_est_mm * 0.00328084
-        #window['-KEY-acc_est_mm'].update(acc_est_mm)
-        #window['-KEY-acc_est_ft'].update(acc_est_ft)
 
     if event == 'average':
         print('averaging')
@@ -223,15 +245,30 @@ ft_t0 = time.perf_counter()
 ft_current = ft_t0
 ft_timer_timeout = 40
 
+switched_to_data_view = False
+
 # Create an event loop
 while True:
     # use timeout so that we can use timers
     event, values = window.read(timeout=1)
 
+    has_fix = update_gps()
+
+    if has_fix and not switched_to_data_view:
+        # transition to GPS data
+        window['-KEY-fix_prog'].update_bar(0)
+        window['-KEY-fix_prog'].update(visible=False)
+        window['-KEY-data_col'].update(visible=True)
+
+        window['-KEY-average_bar'].update(visible=False)
+        window['-KEY-gps_buttons'].update(visible=True)
+        window['-KEY-fix_status'].update(visible=False)
+        window['-KEY-fix_status'].Widget.master.pack_forget()
+
+
     if has_fix:
         cont = op_with_fix(event, values)
         # update gps values
-        update_gps()
         if not cont: break
 
     else:
@@ -244,17 +281,6 @@ while True:
             window['-KEY-fix_prog'].update_bar(perc_elapsed)
             ft_current = time.perf_counter()
 
-        else:
-            has_fix = True
-            # transition to GPS data
-            window['-KEY-fix_prog'].update_bar(0)
-            window['-KEY-fix_prog'].update(visible=False)
-            window['-KEY-data_col'].update(visible=True)
-
-            window['-KEY-average_bar'].update(visible=False)
-            window['-KEY-gps_buttons'].update(visible=True)
-            window['-KEY-fix_status'].update(visible=False)
-            window['-KEY-fix_status'].Widget.master.pack_forget()
 
     if event == "exit" or event == sg.WIN_CLOSED:
         break 
