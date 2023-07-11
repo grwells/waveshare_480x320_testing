@@ -171,7 +171,7 @@ def update_gps():
                 text_color='#08cc18'
 
             time_utc_str = msg_parts[1]
-            time_str = time_utc_str[0:1] + ":" + time_utc_str[2:3] + ":" + time_utc_str[4:5]
+            time_str = time_utc_str[0:2] + ":" + time_utc_str[2:4] + ":" + time_utc_str[4:6]
             lat = msg_parts[2]
             lat_hemi = msg_parts[3]
             long = msg_parts[4]
@@ -194,10 +194,10 @@ def update_gps():
             msg_parts = gps_msg.split(',')
 
             time_utc_str = msg_parts[1]
-            time_str = time_utc_str[0:1] + ":" + time_utc_str[2:3] + ":" + time_utc_str[4:5]
+            time_str = time_utc_str[0:2] + ":" + time_utc_str[2:4] + ":" + time_utc_str[4:6]
 
             date_utc_str = msg_parts[9]
-            date_str = date_utc_str[0:1] + "/" + date_utc_str[2:3] + "/" + date_utc_str[4:5]
+            date_str = date_utc_str[0:2] + "/" + date_utc_str[2:4] + "/" + date_utc_str[4:6]
 
             lat = msg_parts[2]
             lat_hemi = msg_parts[3]
