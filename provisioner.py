@@ -258,7 +258,7 @@ while True:
     # use timeout so that we can use timers
     event, values = window.read(timeout=1)
 
-    has_fix = update_gps()
+    #has_fix = update_gps()
 
     if has_fix and not switched_to_data_view:
         # transition to GPS data
