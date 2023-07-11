@@ -199,7 +199,7 @@ def update_gps():
             time_str = time_utc_str[0:2] + ":" + time_utc_str[2:4] + ":" + time_utc_str[4:6]
 
             date_utc_str = msg_parts[9]
-            date_str = date_utc_str[0:2] + "/" + date_utc_str[2:4] + "/" + date_utc_str[4:6]
+            date_str = date_utc_str[2:4] + "/" + date_utc_str[0:2]  + "/" + date_utc_str[4:6]
 
             lat = msg_parts[2]
             lat_hemi = msg_parts[3]
