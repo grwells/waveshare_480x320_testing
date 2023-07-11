@@ -205,7 +205,7 @@ def update_gps():
             window['long_text'].update(long)
 
             window['-KEY-time'].update(time_str)
-            window['-Key-date'].update(date_str)
+            window['-KEY-date'].update(date_str)
 
         return got_fix 
 
