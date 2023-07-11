@@ -29,13 +29,13 @@ data_column = [
         [
             sg.Frame(
                     'Latitude',
-                    [[sg.Text('--', key='lat_text'), sg.Push(), sg.Text('N')]],
+                    [[sg.Text('--', key='lat_text'), sg.Push(), sg.Text('N', key='-KEY-lat_hemisphere')]],
                     size=(200, 60),
                     key='lat_frame'
                 ),
             sg.Frame(
                     'Longitude',
-                    [[sg.Text('--', key='long_text'), sg.Push(), sg.Text('W')]],
+                    [[sg.Text('--', key='long_text'), sg.Push(), sg.Text('W', key='-KEY-long_hemisphere')]],
                     size=(200, 60),
                     key='long_frame'
                 ),
@@ -186,6 +186,8 @@ def update_gps():
             # post values to display
             window['hdop_text'].update(hdop, text_color=text_color)
             window['sat_text'].update(sats)
+            window['-KEY-lat_hemisphere'].update(lat_hemi)
+            window['-KEY-long_hemisphere'].update(long_hemi)
             window['-KEY-alt'].update(alt)
             window['-KEY-time'].update(time_str)
 
@@ -206,6 +208,8 @@ def update_gps():
 
             window['-KEY-time'].update(time_str)
             window['-KEY-date'].update(date_str)
+            window['-KEY-lat_hemisphere'].update(lat_hemi)
+            window['-KEY-long_hemisphere'].update(long_hemi)
 
             if lat != '' and long != '': 
                 window['lat_text'].update(lat)
