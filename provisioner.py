@@ -262,8 +262,8 @@ while True:
         window['-KEY-fix_prog'].update(visible=False)
         window['-KEY-data_col'].update(visible=True)
 
-        window['-KEY-average_bar'].update(visible=False)
-        window['-KEY-gps_buttons'].update(visible=True)
+        #window['-KEY-average_bar'].update(visible=False)
+        #window['-KEY-gps_buttons'].update(visible=True)
         window['-KEY-fix_status'].update(visible=False)
         window['-KEY-fix_status'].Widget.master.pack_forget()
 
