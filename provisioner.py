@@ -178,7 +178,7 @@ def update_gps():
             long_hemi = msg_parts[5]
             alt = msg_parts[9]
 
-            if lat != '' && long != '': 
+            if lat != '' and long != '': 
                 window['lat_text'].update(lat)
                 window['long_text'].update(long)
                 got_fix = True
@@ -208,7 +208,7 @@ def update_gps():
             window['-KEY-time'].update(time_str)
             window['-KEY-date'].update(date_str)
 
-            if lat != '' && long != '': 
+            if lat != '' and long != '': 
                 window['lat_text'].update(lat)
                 window['long_text'].update(long)
                 got_fix = True
