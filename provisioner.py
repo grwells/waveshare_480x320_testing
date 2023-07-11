@@ -74,6 +74,7 @@ data_column = [
             
         ],
         [
+            """
             sg.Frame(
                 'buttons', 
                 layout=[
@@ -85,6 +86,7 @@ data_column = [
                 visible=True,
                 key='-KEY-gps_buttons'
             ),
+            """
             sg.ProgressBar(
                     100,
                     size=(100, 10),
