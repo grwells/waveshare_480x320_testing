@@ -235,9 +235,9 @@ def op_with_fix(event, values):
         print('averaging')
         #window['-KEY-update_button'].update(visible=False)
         #window['-KEY-avg_button'].update(visible=False)
-        window['-KEY-average_bar'].update(visible=True)
-        window['-KEY-gps_buttons'].update(visible=False)
-        window['-KEY-average_bar'].update_bar(0)
+        #window['-KEY-average_bar'].update(visible=True)
+        #window['-KEY-gps_buttons'].update(visible=False)
+        #window['-KEY-average_bar'].update_bar(0)
 
 
     return True
