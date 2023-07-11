@@ -146,8 +146,6 @@ gps = UbloxGps(port)
 
 
 def update_gps():
-    print("listening for message")
-
     got_fix = False
 
     try:
@@ -157,7 +155,6 @@ def update_gps():
 
         if(gps_msg[1:6] == "GNGGA"):
             # update with GNGGA values
-            got_fix = True
             msg_parts = gps_msg.split(',')
            
             # number of satellites
@@ -181,11 +178,14 @@ def update_gps():
             long_hemi = msg_parts[5]
             alt = msg_parts[9]
 
+            if lat != '' && long != '': 
+                window['lat_text'].update(lat)
+                window['long_text'].update(long)
+                got_fix = True
+
             # post values to display
             window['hdop_text'].update(hdop, text_color=text_color)
             window['sat_text'].update(sats)
-            window['lat_text'].update(lat)
-            window['long_text'].update(long)
             window['-KEY-alt'].update(alt)
             window['-KEY-time'].update(time_str)
 
@@ -205,11 +205,13 @@ def update_gps():
             long = msg_parts[4]
             long_hemi = msg_parts[5]
 
-            window['lat_text'].update(lat)
-            window['long_text'].update(long)
-
             window['-KEY-time'].update(time_str)
             window['-KEY-date'].update(date_str)
+
+            if lat != '' && long != '': 
+                window['lat_text'].update(lat)
+                window['long_text'].update(long)
+                got_fix = True
 
         return got_fix 
 
