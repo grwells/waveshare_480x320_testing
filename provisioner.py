@@ -73,6 +73,7 @@ data_column = [
                 ),
             
         ],
+    ]
             """
         [
             sg.Frame(
@@ -95,7 +96,6 @@ data_column = [
                 )
         ]
             """
-    ]
 
 layout = [
         [
