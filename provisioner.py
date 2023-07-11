@@ -42,24 +42,6 @@ data_column = [
         ],
         [
             sg.Frame(
-                    'Date, Time & Alt.', 
-                    [
-                        [
-                            sg.Text('--', key='-KEY-alt'), 
-                            sg.Text('m'), 
-                            sg.Push()
-                        ],
-                        [
-                            sg.Text('hh:mm:ss', key='-KEY-time'), 
-                            sg.Text('mm/dd/yy', key='-KEY-date'), 
-                            sg.Push()
-                        ]
-                    ],
-                    size=(200, 70),
-                    title_location='w',
-                    #background_color='#001b96'
-                ),
-            sg.Frame(
                     'HDOP',
                     [[sg.Text("-", key='hdop_text'),sg.Push()]],
                     size=(100, 60),
@@ -73,6 +55,26 @@ data_column = [
                 ),
             
         ],
+        [
+            sg.Frame(
+                    'Date, Time & Alt.', 
+                    [
+                        [
+                            sg.Text('--', key='-KEY-alt'), 
+                            sg.Text('m'), 
+                            sg.Push()
+                        ],
+                        [
+                            sg.Text('hh:mm:ss', key='-KEY-time'), 
+                            sg.Text('mm/dd/yy', key='-KEY-date'), 
+                            sg.Push()
+                        ]
+                    ],
+                    size=(400, 70),
+                    title_location='w',
+                    #background_color='#001b96'
+                ),
+        ]
     ]
 """
         [
