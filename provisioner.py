@@ -191,7 +191,6 @@ def update_gps():
 
         elif(gps_msg[1:6] == 'GNRMC'):
             # TODO pull date, time, long and lat
-            got_fix = True
             msg_parts = gps_msg.split(',')
 
             time_utc_str = msg_parts[1]
@@ -258,7 +257,7 @@ while True:
     # use timeout so that we can use timers
     event, values = window.read(timeout=1)
 
-    #has_fix = update_gps()
+    has_fix = update_gps()
 
     if has_fix and not switched_to_data_view:
         # transition to GPS data
